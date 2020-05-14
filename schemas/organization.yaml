@@ -1,0 +1,19 @@
+Organization:
+  type: object
+  required:
+    - id
+    - default
+    - logo
+    - name
+  properties:
+    id:
+      type: string
+    default:
+      type: boolean
+      description: true if this organization is the default organization for the current authority
+    logo:
+      type: string
+      format: uri
+      description: URI to logo image; may be `null` if no logo exists
+    name:
+      type: string

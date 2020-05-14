@@ -1,0 +1,82 @@
+Group:
+  type: object
+  required:
+    - id
+    - groupid
+    - links
+    - name
+    - organization
+    - public
+    - scoped
+    - type
+  properties:
+    id:
+      type: string
+    groupid:
+      type: string
+      description: >
+        Authority-unique identifier that may be set for groups that
+        are owned by a third-party authority. This field is currently present
+        but unused for first-party-authority groups.
+    name:
+      type: string
+    links:
+      type: object
+      properties:
+        html:
+          type: string
+          format: uri
+          description: URL to the group's main (activity) page
+    organization:
+      description: "**EXPANDABLE** The organization to which this group belongs. May be `null`, even if expanded, as not all groups belong to an organization"
+      oneOf:
+          - type: string
+            description: The unique ID for the organization (when not expanded)
+          - $ref: './organization.yaml#/Organization'
+    public:
+      type: boolean
+      deprecated: true
+      description: Indicates whether a group's annotations are world-readable
+    scopes:
+      description: >
+        **EXPANDABLE** Information about the URL restrictions for annotations within this group. Only present if expanded
+      type: object
+      required:
+        - enforced
+        - uri_patterns
+      properties:
+        enforced:
+          type: boolean
+          description: >
+            <p>This property indicates whether there are enforced URI restrictions on annotated
+            documents within this group:</p>
+
+            * `true`: An annotation may only be made within this group if its target document
+               (i.e. `target_uri`) matches one or more of the entries in `uri_patterns`
+            * `false`: Annotations may be created in this group for documents web-wide
+
+               *Note*: When `false`: Any entries in `uri_patterns` define where this group
+               is deemed to be relevant or authoritative, but annotations are not restricted to these URIs.
+        uri_patterns:
+            type: array
+            items:
+              type: string
+            description: >
+              URI patterns of the defined scopes for this group. Examples:
+
+                  ['https://myfavoritesquirrel.com*',
+                   'http://myfavoritesquirrel.com*',
+                   'http://myfavoritesquirrel.org*']
+
+    scoped:
+      type: boolean
+      description: >
+        Whether or not this group has URL restrictions for documents
+        that may be annotated within it. Non-scoped groups allow annotation to
+        documents at any URL
+    type:
+      type: string
+      enum:
+        - private
+        - open
+        - restricted
